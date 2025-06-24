@@ -1,36 +1,52 @@
 <!DOCTYPE html>
-<html>
+<html lang="ar">
 <head>
-  <meta charset="utf-8">
-  <title>PoC – postMessage Data Exfiltration from mlife.mo</title>
+  <meta charset="UTF-8" />
+  <title>PoC: استماع رسائل postMessage من mlife.mo</title>
   <style>
     body {
-      background-color: #0e0e0e;
+      background-color: #121212;
       color: #00ff88;
-      font-family: monospace;
+      font-family: 'Courier New', Courier, monospace;
       padding: 20px;
+      direction: rtl;
     }
     h1 {
       color: #00ffff;
+      margin-bottom: 10px;
     }
     pre {
-      background-color: #1a1a1a;
+      background-color: #222;
       padding: 15px;
       border-radius: 8px;
-      overflow-x: auto;
+      white-space: pre-wrap;
+      word-wrap: break-word;
+      max-height: 70vh;
+      overflow-y: auto;
+      box-shadow: 0 0 10px #00ff88aa;
+    }
+    #status {
+      margin-bottom: 20px;
+      font-weight: bold;
     }
   </style>
 </head>
 <body>
-  <h1>📡 PoC: Listening for postMessage from mlife.mo</h1>
-  <p>If vulnerable, data will appear below:</p>
-  <pre id="output">Waiting for message...</pre>
+  <h1>📡 PoC: استماع رسائل postMessage من mlife.mo فقط</h1>
+  <div id="status">⏳ في انتظار استقبال رسالة من mlife.mo ...</div>
+  <pre id="output">لا توجد بيانات حتى الآن.</pre>
 
   <script>
-    window.addEventListener("message", function(e) {
-      document.getElementById("output").innerText =
-        "✅ Message received from origin: " + e.origin + "\n\n" +
-        JSON.stringify(e.data, null, 2);
+    window.addEventListener("message", function(event) {
+      const trustedOrigin = "https://mlife.mo";
+
+      if (event.origin !== trustedOrigin) {
+        console.warn("تم تجاهل رسالة من مصدر غير موثوق:", event.origin);
+        return;
+      }
+
+      document.getElementById("status").innerText = "✅ رسالة مستقبلة من: " + event.origin;
+      document.getElementById("output").innerText = JSON.stringify(event.data, null, 2);
     });
   </script>
 </body>
