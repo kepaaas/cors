@@ -53,21 +53,32 @@
   <div id="warn" class="warning"></div>
 
   <script>
-    window.addEventListener("message", function(event) {
-      const trustedOrigin = "https://mlife.mo";
-      const statusEl = document.getElementById("status");
-      const outputEl = document.getElementById("output");
-      const warnEl = document.getElementById("warn");
+   // عند تحميل الصفحة، نرسل رسالة لنفسنا
+window.addEventListener("load", () => {
+  window.postMessage({ test: "رسالة تجريبية من الصفحة نفسها" }, window.origin);
+});
 
-      if (event.origin === trustedOrigin) {
-        warnEl.innerText = "";
-        statusEl.innerText = "✅ رسالة مستقبلة من: " + event.origin;
-        outputEl.innerText = JSON.stringify(event.data, null, 2);
-      } else {
-        warnEl.innerText = "⚠️ تم تجاهل رسالة من مصدر غير موثوق: " + event.origin;
-        console.warn("تم تجاهل رسالة من مصدر غير موثوق:", event.origin, event.data);
-      }
-    });
+// استقبال الرسائل وعرضها مع فلترة origin
+window.addEventListener("message", function(event) {
+  const trustedOrigin = "https://mlife.mo";
+  const statusEl = document.getElementById("status");
+  const outputEl = document.getElementById("output");
+  const warnEl = document.getElementById("warn");
+
+  if (event.origin === trustedOrigin) {
+    warnEl.innerText = "";
+    statusEl.innerText = "✅ رسالة مستقبلة من: " + event.origin;
+    outputEl.innerText = JSON.stringify(event.data, null, 2);
+  } else if (event.origin === window.origin) {
+    warnEl.innerText = "ℹ️ رسالة تجريبية من نفس الصفحة (iframe)";
+    statusEl.innerText = "رسالة من المصدر: " + event.origin;
+    outputEl.innerText = JSON.stringify(event.data, null, 2);
+  } else {
+    warnEl.innerText = "⚠️ تم تجاهل رسالة من مصدر غير موثوق: " + event.origin;
+    console.warn("تم تجاهل رسالة من مصدر غير موثوق:", event.origin, event.data);
+  }
+});
+
   </script>
 </body>
 </html>
