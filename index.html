@@ -2,7 +2,7 @@
 <html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>PoC: استماع رسائل postMessage من mlife.mo</title>
+  <title>PoC: استقبال رسائل postMessage مع فلترة origin</title>
   <style>
     body {
       background-color: #121212;
@@ -32,20 +32,19 @@
   </style>
 </head>
 <body>
-  <h1>📡 PoC: استماع رسائل postMessage من mlife.mo فقط</h1>
-  <div id="status">⏳ في انتظار استقبال رسالة من mlife.mo ...</div>
+  <h1>📡 PoC: استقبال رسائل postMessage مع فلترة origin</h1>
+  <div id="status">⏳ في انتظار استقبال أي رسالة...</div>
   <pre id="output">لا توجد بيانات حتى الآن.</pre>
 
   <script>
     window.addEventListener("message", function(event) {
-      const trustedOrigin = "https://mlife.mo";
+      console.log("Received message from origin:", event.origin, event.data);
 
-      if (event.origin !== trustedOrigin) {
-        console.warn("تم تجاهل رسالة من مصدر غير موثوق:", event.origin);
-        return;
+      if (event.origin === "https://mlife.mo") {
+        document.getElementById("status").innerText = "✅ رسالة مستقبلة من: " + event.origin;
+      } else {
+        document.getElementById("status").innerText = "⚠️ رسالة مستقبلة من مصدر غير موثوق: " + event.origin;
       }
-
-      document.getElementById("status").innerText = "✅ رسالة مستقبلة من: " + event.origin;
       document.getElementById("output").innerText = JSON.stringify(event.data, null, 2);
     });
   </script>
