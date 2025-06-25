@@ -1,71 +1,69 @@
 <!DOCTYPE html>
-<html lang="ar" >
+<html lang="ar">
 <head>
   <meta charset="UTF-8" />
-  <title>📡 PoC: استقبال رسائل postMessage من mlife.mo فقط</title>
+  <title>📡 PoC استقبال رسائل postMessage من mlife.mo فقط</title>
   <style>
     body {
       background-color: #121212;
       color: #00ff88;
       font-family: 'Courier New', Courier, monospace;
-      padding: 25px;
+      padding: 20px;
       direction: rtl;
       user-select: text;
     }
     h1 {
       color: #00ffff;
+      text-align: center;
       margin-bottom: 20px;
-      font-weight: bold;
-      text-align: center;
-      text-shadow: 0 0 5px #00ffcc;
-    }
-    #status {
-      margin-bottom: 25px;
-      font-weight: bold;
-      font-size: 1.1rem;
-      text-align: center;
+      text-shadow: 0 0 10px #00ffcc;
     }
     pre {
       background-color: #222;
-      padding: 20px;
-      border-radius: 12px;
+      padding: 15px;
+      border-radius: 10px;
       white-space: pre-wrap;
       word-wrap: break-word;
-      max-height: 75vh;
+      max-height: 60vh;
       overflow-y: auto;
       box-shadow: 0 0 15px #00ff88cc;
       font-size: 0.9rem;
       line-height: 1.4;
     }
-    .warning {
-      color: #ff5555;
-      text-align: center;
-      font-weight: 600;
+    #status {
+      font-weight: bold;
       margin-bottom: 15px;
+      text-align: center;
+    }
+    #warn {
+      color: #ff5555;
+      font-weight: 600;
+      text-align: center;
+      margin-bottom: 20px;
       text-shadow: 0 0 3px #ff4444;
     }
   </style>
 </head>
 <body>
-  <h1>📡 PoC: استقبال رسائل postMessage من mlife.mo فقط</h1>
-  <div id="status">⏳ في انتظار استقبال رسالة من <strong>mlife.mo</strong>...</div>
+  <h1>📡 PoC استقبال رسائل postMessage من mlife.mo فقط</h1>
+  <div id="status">⏳ في انتظار رسالة من <strong>mlife.mo</strong>...</div>
+  <div id="warn"></div>
   <pre id="output">لا توجد بيانات حتى الآن.</pre>
-  <div id="warn" class="warning"></div>
 
   <script>
     window.addEventListener("message", function(event) {
       const trustedOrigin = "https://mlife.mo";
       const statusEl = document.getElementById("status");
-      const outputEl = document.getElementById("output");
       const warnEl = document.getElementById("warn");
+      const outputEl = document.getElementById("output");
 
       if (event.origin === trustedOrigin) {
-        warnEl.innerText = "";
-        statusEl.innerText = "✅ رسالة مستقبلة من: " + event.origin;
-        outputEl.innerText = JSON.stringify(event.data, null, 2);
+        warnEl.textContent = "";
+        statusEl.textContent = "✅ تم استقبال رسالة من: " + event.origin;
+        outputEl.textContent = JSON.stringify(event.data, null, 2);
       } else {
-        warnEl.innerText = "⚠️ تم تجاهل رسالة من مصدر غير موثوق: " + event.origin;
-        console.warn("تم تجاهل رسالة من مصدر غير موثوق:", event.origin, event.data);
+        warnEl.textContent = "⚠️ تم تجاهل رسالة من مصدر غير موثوق: " + event.origin;
+        console.warn("تم تجاهل رسالة غير موثوقة:", event.origin, event.data);
       }
     });
   </script>
