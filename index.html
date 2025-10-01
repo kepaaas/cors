@@ -36,13 +36,6 @@
 <label>Body (for POST, x-www-form-urlencoded)</label>
 <input id="body" value="data=test" />
 
-<label>Use credentials (cookies)</label>
-<select id="creds">
-  <option value="include" selected>include</option>
-  <option value="omit">omit</option>
-  <option value="same-origin">same-origin</option>
-</select>
-
 <button id="run">Run test</button>
 
 <div id="demo">Response will appear here (and in console).</div>
@@ -52,7 +45,6 @@ document.getElementById('run').onclick = function() {
   const url = document.getElementById('url').value.trim();
   const method = document.getElementById('method').value;
   const body = document.getElementById('body').value;
-  const creds = document.getElementById('creds').value;
   const demo = document.getElementById('demo');
 
   if (!url) { alert('Enter target URL'); return; }
@@ -74,12 +66,8 @@ document.getElementById('run').onclick = function() {
 
     xhttp.open(method, url, true);
 
-    // ⚡️ تحديد withCredentials 
-    if (creds === "include") {
-      xhttp.withCredentials = true;   // يسمح بإرسال الكوكيز
-    } else {
-      xhttp.withCredentials = false;  // مايرسلش الكوكيز
-    }
+    // cookie
+    xhttp.withCredentials = true;
 
     if (method === 'POST') {
       xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
