@@ -33,8 +33,8 @@
   <option>OPTIONS</option>
 </select>
 
-<label>Body (for POST,)</label>
-<input id="body" value="" />
+<label>Body (for POST, x-www-form-urlencoded)</label>
+<input id="body" value="data=test" />
 
 <label>Use credentials (cookies)</label>
 <select id="creds">
@@ -58,7 +58,6 @@ document.getElementById('run').onclick = function() {
   if (!url) { alert('Enter target URL'); return; }
   demo.textContent = 'Sending ' + method + ' to ' + url + ' ... (check console/network)';
 
-  // Use XMLHttpRequest similar to your screenshot
   try {
     const xhttp = new XMLHttpRequest();
     xhttp.onreadystatechange = function() {
@@ -68,14 +67,20 @@ document.getElementById('run').onclick = function() {
         const body = this.responseText || '';
         const out = statusLine + '\n\nRESPONSE HEADERS:\n' + headers + '\n\nBODY (preview):\n' + body.slice(0,2000);
         console.log('CORS test result object:', {status:this.status, headers: headers, body: body});
-        // show it on page and alert (so triage can screenshot)
         demo.textContent = out;
         alert('Response received — check page and console');
       }
     };
 
     xhttp.open(method, url, true);
-    xhttp.withCredentials = (creds === 'include');
+
+    // ⚡️ تحديد withCredentials 
+    if (creds === "include") {
+      xhttp.withCredentials = true;   // يسمح بإرسال الكوكيز
+    } else {
+      xhttp.withCredentials = false;  // مايرسلش الكوكيز
+    }
+
     if (method === 'POST') {
       xhttp.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
       xhttp.send(body);
